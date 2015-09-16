@@ -1,0 +1,10 @@
+---
+autosuggest:
+  - "Indix autosuggest analysis"
+categories:
+  - electronics
+  - shoes
+  - watches
+comments:
+  - "Best selling products are taken from Amazon from the above mentioned categories"
+language: scala
