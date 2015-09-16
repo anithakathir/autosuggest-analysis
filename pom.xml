@@ -80,30 +80,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.json4s</groupId>
-            <artifactId>json4s-native_2.11</artifactId>
-            <version>3.2.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json4s</groupId>
-            <artifactId>json4s-jackson_2.11</artifactId>
-            <version>3.2.10</version>
-        </dependency>
-
-    <!--    <dependency>
-            <groupId>com.typesafe.play</groupId>
-            <artifactId>play_2.10</artifactId>
-            <version>2.4.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_2.10</artifactId>
-            <version>2.6.1</version>
-        </dependency>
--->
-        <dependency>
             <groupId>net.liftweb</groupId>
             <artifactId>lift-json_2.11</artifactId>
             <version>3.0-M6</version>
@@ -119,12 +95,6 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.16</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.12</version>
         </dependency>
 
     </dependencies>

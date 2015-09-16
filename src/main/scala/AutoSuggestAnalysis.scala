@@ -18,8 +18,6 @@ object AutoSuggestAnalysis
 
 	implicit class ListOptions(list: List[String])
 	{
-		implicit def stripList: String = if(list.isEmpty) "Nil" else list.toString().stripPrefix("List(").stripSuffix(")")
-
 		implicit def tokenize: List[String] =
 			list.foldLeft(List[String]())((acc, phrase) => phrase.substring(phrase.indexOf(" ")+1,phrase.length).split("[^A-Za-z0-9]").toList ::: acc).distinct
 	}
@@ -29,19 +27,21 @@ object AutoSuggestAnalysis
 	def main(args: Array[String]) {
 
 		val searchPhraseList: List[String] = GeneratePopularPhrases.getSearchPhrases()
-		println("Search Phrases : "+searchPhraseList)
-		println("Search phrases size : "+searchPhraseList.size)
+
 		try {
 			writer.write("||Search phrase||Indix auto suggest list||Amazon auto suggest list||Percentage match\n")
-			val sumPercent = searchPhraseList.foldLeft(0)((accPercent, phrase) => accPercent + findPercentageMatch(phrase).toInt)
-			writer.write("Average match percentage : " + sumPercent / searchPhraseList.size+"%")
+			val sumPercent = searchPhraseList.foldLeft(0.00,0){(accumulator, phrase) =>
+				val percentWithNonEmptyFlag = findPercentageMatch(phrase)
+				(accumulator._1 + percentWithNonEmptyFlag._1, accumulator._2 + percentWithNonEmptyFlag._2) }
+			writer.write("Average match percentage : " + sumPercent._1 / sumPercent._2 +"%")
+
 		}
 		finally{
 			writer.close()
 		}
 	}
 
-	def findPercentageMatch(searchPhrase: String): Double = {
+	def findPercentageMatch(searchPhrase: String): (Double,Int) = {
 		val amazonPhraseList = amazonSuggest(searchPhrase)
 		val indixPhraseList = indixSuggest(searchPhrase).take(amazonPhraseList.size)
 
@@ -50,13 +50,13 @@ object AutoSuggestAnalysis
 
 		val percentageMatch = (indixSuggestionTokens.map(ind => amazonSuggestionTokens.map(amz => amz.contains(ind).convertToInt)).listSum +
 			amazonSuggestionTokens.map(amz => indixSuggestionTokens.map(ind => ind.contains(amz).convertToInt)).listSum -
-			indixSuggestionTokens.intersect(amazonSuggestionTokens).size).toDouble /indixSuggestionTokens.size.toDouble * 100
+			indixSuggestionTokens.intersect(amazonSuggestionTokens).size).toDouble /amazonSuggestionTokens.size.toDouble * 100
 
-		writer.write("|"+searchPhrase+"|"+indixPhraseList.stripList+"|"+amazonPhraseList.stripList+"|"+percentageMatch+"%|\n")
+		if(indixPhraseList.nonEmpty) {
+			writer.write("|" + searchPhrase + "|" + indixPhraseList + "|" + amazonPhraseList + "|" + percentageMatch + "%|\n")
+		}
 
-		println(("|"+searchPhrase+"|"+indixPhraseList.stripList+"|"+amazonPhraseList.stripList+"|"+percentageMatch+"|\n"))
-
-		percentageMatch
+		(percentageMatch,indixPhraseList.nonEmpty.convertToInt)
 	}
 
 	def indixSuggest(searchPhrase: String): List[String] ={
@@ -71,7 +71,7 @@ object AutoSuggestAnalysis
 
 	def amazonSuggest(searchPhrase: String): List[String] = {
 
-		val url = "http://completion.amazon.com/search/complete?method=completion&mkt=1&client=amazon-search-ui&x=String&search-alias=aps&q=" + URLEncoder.encode(searchPhrase, "UTF-8") + "&qs=&cf=1&noCacheIE=1441781628953&fb=1&sc=1&" /*,"UTF-8")*/
+		val url = "http://completion.amazon.com/search/complete?method=completion&mkt=1&client=amazon-search-ui&x=String&search-alias=aps&q=" + URLEncoder.encode(searchPhrase, "UTF-8") + "&qs=&cf=1&noCacheIE=1441781628953&fb=1&sc=1&"
 		val amazonResponse = Source.fromURL(url).mkString
 		Thread.sleep(4000)
 		val phrasesBeginIndex = amazonResponse.indexOf(',') + 2

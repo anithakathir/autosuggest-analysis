@@ -1,3 +1,7 @@
+
+
+
+/*
 implicit class ConvertBoolToInt(booleanValue: Boolean) {
 	implicit def convertToInt: Int = if (booleanValue) 1 else 0
 }
@@ -22,6 +26,7 @@ val amzp = amazonPhraseList.tokenize
 
 (indp.map(ind => amzp.map(amz => amz.contains(ind).convertToInt)).listSum +
 	amzp.map(amz => indp.map(ind => ind.contains(amz).convertToInt)).listSum - indp.intersect(amzp).size).toDouble /indp.size.toDouble * 100
+*/
 
 /*
 val indixPhraseList = List("toms women", "toms women s", "toms women classics", "toms women s classics")//, "toms women slip", "toms women s slip", "toms women canvas", "toms women s canvas", "toms women on", "toms women slip on")
@@ -51,3 +56,5 @@ implicit class Convert(bool: Boolean) {
 val file = "src/categories.yaml"
 //val input = Source.fromFile(file)
 val f = Source.fromFile("src/main/resources/categories")*/
+
+
