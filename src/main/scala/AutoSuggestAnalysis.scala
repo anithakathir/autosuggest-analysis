@@ -48,9 +48,9 @@ object AutoSuggestAnalysis
 		val indixSuggestionTokens = indixPhraseList.tokenize
 		val amazonSuggestionTokens = amazonPhraseList.tokenize
 
-		val percentageMatch = /*BigDecimal(*/(indixSuggestionTokens.map(ind => amazonSuggestionTokens.map(amz => amz.contains(ind).convertToInt)).listSum +
+		val percentageMatch = (indixSuggestionTokens.map(ind => amazonSuggestionTokens.map(amz => amz.contains(ind).convertToInt)).listSum +
 			amazonSuggestionTokens.map(amz => indixSuggestionTokens.map(ind => ind.contains(amz).convertToInt)).listSum -
-			indixSuggestionTokens.intersect(amazonSuggestionTokens).size).toDouble /indixSuggestionTokens.size.toDouble * 100//).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+			indixSuggestionTokens.intersect(amazonSuggestionTokens).size).toDouble /indixSuggestionTokens.size.toDouble * 100
 
 		writer.write("|"+searchPhrase+"|"+indixPhraseList.stripList+"|"+amazonPhraseList.stripList+"|"+percentageMatch+"%|\n")
 

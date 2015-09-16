@@ -7,4 +7,3 @@ val allImages = doc.select(".zg_title").select("a[href]").toList
 
 allImages.size
 //allImages.map( link => link.text() )
-

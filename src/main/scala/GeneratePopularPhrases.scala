@@ -23,7 +23,7 @@ object GeneratePopularPhrases {
 
 	implicit class RemoveSpecialCharacters(str: String) {
 		implicit def removeSpecialCharacters: String = str.replaceAll("[^A-Za-z0-9. ]"," ")
-		implicit def replaceSymbols: String = symbolExpansionMap.foldLeft(str){case(text,(symbol,replacement)) => text.replace(symbol,replacement)}
+		implicit def replaceSymbols: String = symbolExpansionMap.foldLeft(str){case(text,(symbol,word)) => text.replace(symbol,word)}
 	}
 
 	implicit class RemovePrepositions(list: List[String]) {

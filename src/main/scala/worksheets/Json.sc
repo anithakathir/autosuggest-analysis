@@ -47,8 +47,6 @@ implicit class Convert(bool: Boolean) {
 }
 */
 
-
-
 //obj = yaml.load(ios).asInstanceOf[java.util.Map[String, Any]
 /*
 val file = "src/categories.yaml"
